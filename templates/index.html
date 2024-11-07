@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parking Lot Status</title>
+    <style>
+        body {
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            background-image: url('static/CarParkingTemplate12slot.png');
+            font-family: Arial, sans-serif; /* Ensuring a uniform font */
+        }
+        .slot {
+            position: absolute;
+            width: 130px;
+            height: 250px;
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+            border: 1px solid #000;
+            text-align: center;
+            line-height: 50px; /* Center text vertically */
+            overflow: hidden; /* Prevents text from spilling out */
+            white-space: nowrap; /* Stops text from breaking into new lines */
+            padding: 0 10px; /* Adds padding to prevent text touching the edges */
+            box-sizing: border-box; /* Includes padding in width calculation */
+            transition: background-color 0.3s; /* Smooth transition for color change */
+        }
+        #slot1 { top: 70px; left: 20px; }
+        #slot2 { top: 70px; left: 160px; }
+        #slot3 { top: 70px; left: 300px; }
+        #slot4 { top: 70px; left: 440px; }
+        #slot5 { top: 70px; left: 580px; }
+        #slot6 { top: 70px; left: 720px; }
+        #slot7 { top: 400px; left: 20px; }
+        #slot8 { top: 400px; left: 160px; }
+        #slot9 { top: 400px; left: 300px; }
+        #slot10 { top: 400px; left: 440px; }
+        #slot11 { top: 400px; left: 580px; }
+        #slot12 { top: 400px; left: 720px; }
+    </style>
+</head>
+<body>
+    <h1>Parking Lot Status</h1>
+    <div id="slot1" class="slot">S1:Free</div>
+    <div id="slot2" class="slot">S2:Free</div>
+    <div id="slot3" class="slot">S3: Free</div>
+    <div id="slot4" class="slot">S4: Free</div>
+    <div id="slot5" class="slot">S5: Free</div>
+    <div id="slot6" class="slot">S6: Free</div>
+    <div id="slot7" class="slot">S7: Free</div>
+    <div id="slot8" class="slot">S8: Free</div>
+    <div id="slot9" class="slot">S9: Free</div>
+    <div id="slot10" class="slot">S10: Free</div>
+    <div id="slot11" class="slot">S11: Free</div>
+    <div id="slot12" class="slot">S12: Free</div>
+
+    <script>
+        async function updateStatuses() {
+            try {
+                const response = await fetch('/status');
+                const data = await response.json();
+                for (const slotId in data) {
+                    const slotElement = document.getElementById(slotId.replace(' ', '').toLowerCase());
+                    if (slotElement) {
+                        const status = data[slotId].occupied ? 'Occ' : 'Free';
+                        slotElement.textContent = `${slotId}: ${status}`;
+                        slotElement.style.backgroundColor = data[slotId].occupied ? 'red' : 'green';
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching parking status:', error);
+            }
+        }
+
+        setInterval(updateStatuses, 5000);
+        updateStatuses();
+    </script>
+</body>
+</html>
